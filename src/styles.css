@@ -68,7 +68,9 @@ img { display: block; }
 .nav-burger:hover { border-color: var(--blue); }
 .nav-mobile {
   display: none;
-  position: fixed; top: 59px; left: 0; right: 0; bottom: 0; z-index: 49;
+  position: absolute; top: 100%; left: 0; right: 0; z-index: 49;
+  height: calc(100vh - 59px);
+  height: calc(100dvh - 59px);
   background: var(--bg);
   padding: 16px;
   overflow-y: auto;
