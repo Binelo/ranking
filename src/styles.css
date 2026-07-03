@@ -94,6 +94,40 @@ img { display: block; }
   .nav-mobile { display: block; }
 }
 
+/* ---- Bracket (chaveamento) ---- */
+.bracket {
+  display: flex; gap: 14px; align-items: flex-start;
+  overflow-x: auto; padding: 4px 2px 14px;
+  scroll-snap-type: x proximity;
+  -webkit-overflow-scrolling: touch;
+  text-align: left;
+}
+.bracket-round {
+  min-width: 220px; max-width: 260px; flex-shrink: 0;
+  scroll-snap-align: start;
+  display: flex; flex-direction: column; gap: 10px;
+}
+.bracket-round-title {
+  font-size: 0.78rem; font-weight: 700; color: var(--text-dim);
+  text-transform: uppercase; letter-spacing: 0.5px;
+}
+.bracket-match {
+  background: var(--bg-soft); border: 1px solid var(--border);
+  border-radius: 10px; overflow: hidden;
+}
+.bracket-match.live { border-color: var(--blue); }
+.bracket-match.champ { border-color: var(--blue); background: var(--blue-soft); }
+.bracket-slot {
+  display: flex; align-items: center; gap: 8px;
+  padding: 9px 10px; font-size: 0.88rem; min-height: 44px;
+}
+.bracket-slot + .bracket-slot { border-top: 1px solid var(--border); }
+.bracket-slot.win { color: var(--white); }
+.bracket-slot.lose { opacity: 0.45; }
+.bracket-name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.bracket-check { color: var(--blue); font-weight: 700; }
+.bracket-live-tag { font-size: 0.72rem; color: var(--blue); padding: 0 10px 8px; }
+
 /* ---- Botões ---- */
 .btn {
   display: inline-flex; align-items: center; justify-content: center; gap: 8px;

@@ -3,6 +3,7 @@ import { Link, useParams } from 'react-router-dom';
 import api, { errMsg } from '../api.js';
 import { metadataFields } from '../components/MetadataFields.jsx';
 import ItemThumb from '../components/ItemThumb.jsx';
+import Bracket from '../components/Bracket.jsx';
 
 function DuelCard({ item, onPick, disabled }) {
   const meta = metadataFields(item.type)
@@ -56,6 +57,8 @@ function GroupTables({ tables }) {
 function FinalRanking({ session }) {
   const [showHistory, setShowHistory] = useState(false);
   const [showGroups, setShowGroups] = useState(false);
+  const [showBracket, setShowBracket] = useState(false);
+  const hadKnockout = session.history?.some((d) => d.stage !== 'grupos');
   const ranking = session.finalRanking || [];
   const medals = ['🥇', '🥈', '🥉'];
 
@@ -85,6 +88,11 @@ function FinalRanking({ session }) {
             {showGroups ? 'Ocultar grupos' : '📊 Ver fase de grupos'}
           </button>
         )}
+        {hadKnockout && (
+          <button className="btn" onClick={() => setShowBracket((v) => !v)}>
+            {showBracket ? 'Ocultar chaveamento' : '🗂 Ver chaveamento'}
+          </button>
+        )}
         <button className="btn" onClick={() => setShowHistory((v) => !v)}>
           {showHistory ? 'Ocultar histórico' : `📝 Ver histórico (${session.history?.length || 0} duelos)`}
         </button>
@@ -94,6 +102,8 @@ function FinalRanking({ session }) {
           </Link>
         )}
       </div>
+
+      {showBracket && <Bracket session={session} />}
 
       {showGroups && <GroupTables tables={session.groupTables} />}
 
@@ -119,6 +129,7 @@ export default function SessionPlay() {
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
   const [showGroups, setShowGroups] = useState(false);
+  const [showBracket, setShowBracket] = useState(false);
 
   useEffect(() => {
     api
@@ -183,14 +194,20 @@ export default function SessionPlay() {
         <div className="spinner">Preparando próximo duelo…</div>
       )}
 
-      {session.mode === 'tournament' && session.groupTables?.length > 0 && (
-        <>
-          <button className="btn btn-sm mt" onClick={() => setShowGroups((v) => !v)}>
+      <div className="row mt" style={{ justifyContent: 'center' }}>
+        {!isGroups && (
+          <button className="btn btn-sm" onClick={() => setShowBracket((v) => !v)}>
+            {showBracket ? 'Ocultar chaveamento' : '🗂 Chaveamento'}
+          </button>
+        )}
+        {session.mode === 'tournament' && session.groupTables?.length > 0 && (
+          <button className="btn btn-sm" onClick={() => setShowGroups((v) => !v)}>
             {showGroups ? 'Ocultar grupos' : '📊 Classificação dos grupos'}
           </button>
-          {showGroups && <GroupTables tables={session.groupTables} />}
-        </>
-      )}
+        )}
+      </div>
+      {showBracket && !isGroups && <Bracket session={session} />}
+      {showGroups && session.groupTables?.length > 0 && <GroupTables tables={session.groupTables} />}
 
       <p className="muted mt">Clique no seu favorito. Seu progresso é salvo automaticamente — pode fechar e voltar depois.</p>
     </div>

@@ -55,6 +55,7 @@ export default function ItemDetail() {
           )}
 
           <div className="stats-grid mt">
+            <div className="stat-box"><div className="value">⚡ {s.elo ?? 1000}</div><div className="label">ELO</div></div>
             <div className="stat-box"><div className="value">{s.timesRanked || 0}</div><div className="label">sessões</div></div>
             <div className="stat-box"><div className="value">{s.winCount || 0}</div><div className="label">vezes campeão</div></div>
             <div className="stat-box"><div className="value">{s.averageRankPosition ?? '—'}</div><div className="label">posição média</div></div>

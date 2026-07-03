@@ -4,6 +4,7 @@ import api from '../api.js';
 import ItemThumb from '../components/ItemThumb.jsx';
 
 const TABS = [
+  ['elo', '⚡ ELO'],
   ['champions', '🏆 Mais campeões'],
   ['avgPosition', '📊 Melhor posição média'],
   ['mostUsed', '📦 Mais utilizados'],
@@ -28,6 +29,7 @@ export default function GlobalStats() {
   function statLabel(item) {
     const s = item.stats || {};
     switch (by) {
+      case 'elo': return `${s.elo ?? 1000} pts`;
       case 'champions': return `${s.winCount || 0} títulos`;
       case 'avgPosition': return `posição média ${(item.avgPosition ?? 0).toFixed(2)}`;
       case 'mostUsed': return `${s.timesRanked || 0} sessões`;
