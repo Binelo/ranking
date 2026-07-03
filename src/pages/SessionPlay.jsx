@@ -54,7 +54,7 @@ function GroupTables({ tables }) {
   );
 }
 
-function FinalRanking({ session }) {
+function FinalRanking({ session, onUndo, busy }) {
   const [showHistory, setShowHistory] = useState(false);
   const [showGroups, setShowGroups] = useState(false);
   const [showBracket, setShowBracket] = useState(false);
@@ -102,6 +102,14 @@ function FinalRanking({ session }) {
           </Link>
         )}
       </div>
+
+      {session.canUndo && onUndo && (
+        <p className="center mt">
+          <button className="btn btn-sm" onClick={onUndo} disabled={busy}>
+            ↩ Desfazer último duelo
+          </button>
+        </p>
+      )}
 
       {showBracket && <Bracket session={session} />}
 
@@ -157,10 +165,24 @@ export default function SessionPlay() {
     }
   }
 
+  async function undo() {
+    if (busy) return;
+    setBusy(true);
+    setError('');
+    try {
+      const res = await api.post(`/sessions/${id}/undo`);
+      setSession(res.data.session);
+    } catch (err) {
+      setError(errMsg(err));
+    } finally {
+      setBusy(false);
+    }
+  }
+
   if (error && !session) return <div className="error-box mt">{error}</div>;
   if (!session) return <div className="spinner">Carregando…</div>;
 
-  if (session.status === 'finished') return <FinalRanking session={session} />;
+  if (session.status === 'finished') return <FinalRanking session={session} onUndo={undo} busy={busy} />;
 
   const [a, b] = session.currentDuel || [];
   const { duelsDone, duelsTotal } = session.progress || {};
@@ -195,6 +217,11 @@ export default function SessionPlay() {
       )}
 
       <div className="row mt" style={{ justifyContent: 'center' }}>
+        {session.canUndo && (
+          <button className="btn btn-sm" onClick={undo} disabled={busy}>
+            ↩ Desfazer
+          </button>
+        )}
         {!isGroups && (
           <button className="btn btn-sm" onClick={() => setShowBracket((v) => !v)}>
             {showBracket ? 'Ocultar chaveamento' : '🗂 Chaveamento'}
