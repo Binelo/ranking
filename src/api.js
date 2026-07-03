@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "https://ranking-back.vercel.app/",
+  baseURL: "https://ranking-back.vercel.app/api",
 });
 
 api.interceptors.request.use((config) => {
